@@ -1,0 +1,148 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eureka
+spec:
+  selector:
+    matchLabels:
+      app: eureka
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: eureka
+    spec:
+      containers:
+      - name: eureka
+        image: tmp
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8761
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8761
+          failureThreshold: 30
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8761
+          failureThreshold: 30
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: eureka
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eureka
+spec:
+  selector:
+    app: eureka
+  ports:
+  - port: 8761
+    targetPort: 8761
+    
+#########################################################
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+spec:
+  selector:
+    matchLabels:
+      app: worker
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+      - name: worker
+        image: tmp
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8081
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8081
+          failureThreshold: 30
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8081
+          failureThreshold: 30
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: worker
+        - name: EUREKA_URL
+          value: http://eureka:8761/eureka/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: worker
+spec:
+  selector:
+    app: worker
+  ports:
+  - port: 8081
+
+
+#########################################################
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+spec:
+  selector:
+    matchLabels:
+      app: gateway
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+      - name: gateway
+        image: tmp
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          failureThreshold: 30
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          failureThreshold: 30
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: gateway
+        - name: EUREKA_URL
+          value: http://eureka:8761/eureka/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+spec:
+  type: NodePort
+  selector:
+    app: gateway
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30000
+
+

@@ -1,3 +1,10 @@
 spring:
   application:
     name: gateway
+    
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL}
