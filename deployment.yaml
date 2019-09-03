@@ -14,20 +14,10 @@ spec:
     spec:
       containers:
       - name: eureka
-        image: tmp
+        image: kelog/eureka-demo
         imagePullPolicy: Never
         ports:
         - containerPort: 8761
-        livenessProbe:
-          httpGet:
-            path: /actuator/health
-            port: 8761
-          failureThreshold: 30
-        readinessProbe:
-          httpGet:
-            path: /actuator/health
-            port: 8761
-          failureThreshold: 30
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: eureka
@@ -62,20 +52,10 @@ spec:
     spec:
       containers:
       - name: worker
-        image: tmp
+        image: kelog/eureka-demo
         imagePullPolicy: Never
         ports:
         - containerPort: 8081
-        livenessProbe:
-          httpGet:
-            path: /actuator/health
-            port: 8081
-          failureThreshold: 30
-        readinessProbe:
-          httpGet:
-            path: /actuator/health
-            port: 8081
-          failureThreshold: 30
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: worker
@@ -112,20 +92,10 @@ spec:
     spec:
       containers:
       - name: gateway
-        image: tmp
+        image: kelog/eureka-demo
         imagePullPolicy: Never
         ports:
         - containerPort: 8080
-        livenessProbe:
-          httpGet:
-            path: /actuator/health
-            port: 8080
-          failureThreshold: 30
-        readinessProbe:
-          httpGet:
-            path: /actuator/health
-            port: 8080
-          failureThreshold: 30
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: gateway
