@@ -9,10 +9,10 @@ import org.springframework.web.client.RestTemplate;
 @Profile("gateway")
 @Configuration
 public class RestTemplateConfiguration {
+    
     @Bean
     @LoadBalanced
     public RestTemplate restTemplate() {
-        // Do any additional configuration here
         return new RestTemplate();
     }
 }
